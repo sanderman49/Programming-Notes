@@ -208,6 +208,8 @@ Be careful not to omit the break or the switch statement execute the cases below
 # Functions
 By default return 'undefined'.
 
+arguments are what you pass into the function. Parameters are the placeholders.
+
 ## Anonymous Functions
 Anonymous functions are when you assign a function to a variable
 ```js
@@ -215,3 +217,294 @@ Anonymous functions are when you assign a function to a variable
         // code here    
     }
 ```
+
+### Arrow Syntax
+```js
+    const functionName = (parameter) => {
+        // code
+    }
+```
+
+One parameter can exclude the parentheses:
+```js
+    const functionName = parameter => {
+        // code
+    }
+```
+
+One line with no return:
+```js
+    const functionName = parameter => console.log("code");
+```
+
+One line with return:
+```js
+    const functionName = parameter => parameter * b; // will return the result of 'parameter * b' implicitly. Can't use an explicit return with this syntax.
+```
+
+# Scope
+Global, local and block.
+
+## Global
+Outermost scope.
+
+## Local
+Accessible within a function only.
+
+## Block
+Introduced later, code section within {}. (if statements, loops, etc);
+
+# Arrays
+Can hold anything.
+
+.length to access number of elements.
+
+Acessing a non-existant index will return undefined.
+
+You update elements by assigning a new value to a specific index.
+You can add new elements by assigning to an index that doesn't exist yet, if you assign to an index far above what exists, the values inbetween will still be undefined.
+
+You can create a 2d array by creating an array in an array.
+
+## Shallow Copies
+Spread operator lets you make a shallow copy of the array: `let copy = [...original];`
+
+JS by default will make a copy when you assign a variable to another but when copying arrays, any inner arrays and stuff will have the same memory reference in both arrays unless you use the above syntax.
+
+## Methods
+- push(): Adds an element to the end of the array (returns the new length of the array).
+- pop(): Remove the last element (also returns what it removed).
+- shift(): Remove the first element from an array (also returns what it removed).
+- unshift(): Adds to the beginning of the array (returns the new length of the array).
+- split(separator): Divides a string into an array of strings.
+- reverse(): Reverses an array.
+- join(separator): Converts an array into a string.
+- indexOf(element, fromIndex): Not found = -1.
+- splice(startIndex, itemsToRemove, item1, item2): items 1 and 2 will be added in place of the removed items. It will insert before the startIndex.
+- includes(): Returns bool. Uses strict equality.
+- concat(): Makes a new array by merging two or more arrays.
+- slice(): returns a new array with a shallow copy of a portion of the original array.
+
+push() and unshift() can add multiple elements. Pop and shift can't remove multiple.
+
+## Destructuring
+```js
+let fruits = ["apple", "banana", "orange"];
+
+let [first, second, third] = fruits;
+```
+
+skip elements:
+```js
+let colors = ["red", "green", "blue", "yellow"];
+let [firstColor, , thirdColor] = colors;
+```
+
+default values: 
+```js
+let numbers = [1, 2];
+let [a, b, c = 3] = numbers;
+```
+
+rest syntax:
+```js
+let fruits = ["apple", "banana", "orange", "mango", "kiwi"];
+let [first, second, ...rest] = fruits;
+
+console.log(first);  // "apple"
+console.log(second); // "banana"
+console.log(rest);   // ["orange", "mango", "kiwi"]
+```
+Rest must be the las element of the deconstruction.
+
+# Objects
+Use bracket notation to access property names that aren't valid JS identifiers, e.g.
+```js
+thing["property name"]
+```
+Also lets you access properties using variables (dynamically).
+
+example object (quotes are optional for valid js identifiers):
+```js
+const oddObject = {
+  "1stProperty": "Hello",
+  "property with spaces": "World"
+};
+```
+
+## Deleting Properties
+`delete` keyword:
+```js
+delete object.property
+```
+
+Destructuring:
+```js
+const { job, city, ...remainingProperties } = person;
+
+// The remainingProperties variable won't have job or city.
+```
+
+## Checking For Properties
+- `object.hasOwnProperty("propertyToFind")`. Returns boolean.
+- `in`: e.g. `"propertyToFind" in object`. Returns boolean.
+- Checking for `undefined`: `object.propertyToFind !== undefined`. May cause false negative if a property is intentially undefined.
+
+## Nested Objects
+`object.property.nestedProperty` or `object['property']['nestedProperty']`.
+
+## Arrays
+`object.arrayProperty[index].propertyInArrayObject`
+
+## Primatives vs Non-Primatives
+Primatives are immutable (they can't be modified after creation). This is why they can be copied.
+
+Non-Primatives are objects (objects, arrays, functions, etc). They can hold multiple values as properties or elements. If a variable contains a non-primative value, you are holding a reference to that object. If you assign that object to another variable without making an explicit copy, you are just copying a pointer.
+
+## Functions vs Object Methods
+Object methods are functions associated with an object:
+```js
+const person = {
+    name: "Bob",
+    age: 30,
+    sayHello: function() {
+        return "Hello, my name is " + this.name;
+    }
+};
+```
+
+functions are called by name, methods are called using dot notation (`person.sayHello()`).
+
+Functions have their own scope and don't have a built-in reference to an object.
+
+Methods are bound to their object, and access its properties and other methods using `this`.
+
+Methods organise code into logical objects, while functions are for more general reusable code.
+
+## Object Constructor
+You can use `Object()` or `new Object()`. It behaves differently in some way that wasn't explained.
+
+You can use `Object()` to wrap a value in an object. E.g. `Object(45)`. This is useful if you need an object wrapper for a primative value for some reason.
+
+## JSON
+Supports lots of data types.
+
+Keys need to be wrapped in double quotes.
+
+Importing JSON:
+```js
+import data from "./example.json" with { type: "json" };
+
+console.log(data.age);
+```
+
+### JSON.parse() and JSON.stringify()
+`JSON.stringify(object, replacer, spacer)` converts a JS Object into JSON. Replacer is optional and is an array of the parameters you want in the JSON. Spacer lets you control the spacing (formatting).
+
+`JSON.parse()` turns JSON into a JS Object.
+
+## Optional Chaining
+Lets you access potentially non-existant object values without throwing an error:
+```js
+const user = {
+  name: "John",
+  profile: {
+    email: "john@example.com",
+    address: {
+      street: "123 Main St",
+      city: "Somewhere"
+    }
+  }
+};
+
+console.log(user?.profile?.address?.street); // "123 Main St"
+console.log(user?.profile?.phone?.number);   // undefined
+```
+
+## Object Destructuring
+Lets you extract multiple properties in one statement:
+```js
+const person = { name: "Alice", age: 30, city: "New York" };
+
+const { name, age } = person;
+
+console.log(name); // Alice
+console.log(age);  // 30
+```
+
+You can also choose your own variable names: `let { name: personName, age: personAge } = person;`.
+
+Additionally, you can set default values `let { name, age, country = "Unknown" } = person;`.
+
+Shorthand for creating objects: `let person = { name, age }; // person: { name: "Bob", age: 25 }`. Useful for returning objects from functions.
+
+### Nested Object Destructuring
+```js
+const recipe = {
+  name: "Chocolate Cake",
+  ingredients: {
+    flour: "2 cups",
+    sugar: "1 cup"
+  }
+};
+
+// Extract `flour` from `ingredients`
+const { ingredients: { flour } } = recipe;
+
+console.log(flour); // "2 cups"
+```
+
+# Loops
+`break` exit the loop early.
+`continue` go to the next iteration.
+
+You can use lables on these as well to control the flow of nested loops:
+```js
+outerLoop: for (let i = 0; i < 3; i++) {
+  innerLoop: for (let j = 0; j < 3; j++) {
+    if (i === 1 && j === 1) {
+      break outerLoop;
+    }
+    console.log(`i: ${i}, j: ${j}`);
+  }
+}
+```
+
+## For Loop
+Structure:
+```js
+for (let i = 0; i < 5; i++) {
+  console.log(i);
+}
+```
+
+### For Of Loop
+Structure:
+```js
+for (variable of iterable) {
+  // code block to be executed
+}
+```
+
+Both `let` and `const` are valid for initialising the variable but obviously const won't let you change the variable inside of the loop.
+
+Works on arrays, strings, etc.
+
+### For In Loop
+When iterating over properties in an object:
+```js
+for (variable in object) {
+  // code block to be executed
+}
+```
+
+The variable will be the property name, you have to reference the object inside of the for loop to actually access its values.
+
+It is recommended to use a for of loop for things that aren't objects.
+
+## Do While
+```js
+do {
+} while(condition);
+```
+Will run the loop once before checking the condition.
