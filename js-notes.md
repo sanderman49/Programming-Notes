@@ -51,12 +51,37 @@ There is also replaceAll
 
 JavaScript has an 'Infinity' keyword (also -Infinity).
 
+## String Object
+`new String("string")`
+Wraps the string primative in an object. I have no clue why you would want to do this but you can for some reason.
+
+Convert back into string literal with `.stringify()`
+
+## toString()
+You can convert values to strings using this. Works on numbers, arrays, etc. 
+
+When using it on a number you can input a radix to output that number in a certain base (obviously defaults to base10). E.g.
+```js
+const num = 10;
+console.log(num.toString(2)); // "1010" Base 2.
+```
+
+### Objects
+This wont stringify an object it will just output `"[object Object]"`.
+To stringify an object use JSON.stringify();
+
 # Numbers and Bools
 
 ## 'Number' Type
 Includes floating points, integers, NaN, Infinity and all other special numbers. They are all considered 'Numbers' by JS.
 
 This also includes non-base-10 number systems.
+
+## Number Constructor
+If you call it without the `new` keyword, it will return a primitive type. This can be be used for type coercion (e.g. converting a string to a number).
+An empty string will be 0, random characters will be `NaN`, `true` and `false` will return 1 and 0 respectively, `null` will be 0 and `undefined` will be `NaN`.
+Additionally, an empty array will return 0, an array with a single number will return that number and an array with multiple numbers or any strings will return `NaN`.
+Finally, an object will be `NaN`.
 
 ### Arithmatic
 You will get a NaN if you try to perform maths on non-numbers.
@@ -317,6 +342,12 @@ console.log(rest);   // ["orange", "mango", "kiwi"]
 ```
 Rest must be the las element of the deconstruction.
 
+## Arrays of Fixed Length
+Use the Array object: `new Array(n)`.
+If you want to fill the array with a default value, use `new Array(n).fill(default)`.
+
+You can also use `Array.from({ length: n })`. The difference is that `Array.from()` will fill the array with `undefined` explicitly, rather than leaving each position empty. I assume you can input another array into this can get a copy of it. You can also use callbacks to do this.
+
 # Objects
 Use bracket notation to access property names that aren't valid JS identifiers, e.g.
 ```js
@@ -508,3 +539,282 @@ do {
 } while(condition);
 ```
 Will run the loop once before checking the condition.
+
+# Linters and Formatters
+
+A linter is a static code analysis tool which flags programming errors, bugs and style errors.
+
+A formatter will automatically format your code to match a style guide.
+
+# Closures
+When an inner function has access to variables in its outer inclosing scope: e.g.
+```js
+function outerFunction(x) {
+    let y = 10;
+    function innerFunction(){
+        console.log(x + y);
+    }
+    return innerFunction;
+}
+
+let closure = outerFunction(5);
+console.log(closure()); // 15
+```
+
+`innerFunction()` still has access to the variable in `outerFunction()`, even though `outerFunction()` finished executing. Also, if the variable in the `outerFunction()` changes, the `innerFunction()` will also see it, it's capturing a reference not a value.
+
+# The `var` Keyword
+Basically `var` is old, doesn't support block scoping, can be redeclared multiple times in the same scope without error and probably shouldn't be used because of this.
+
+# Hoisting
+The process of moving variable declarations to the top of their scope.
+
+In the context of variables, you can use a variable within a scope before you declare it because JavaScript 'hoists' it and allocates memory before running any code. It will be `undefined` though until you get to the part in the execution where it is assigned. It only works this way with `var` and not `let` or `const`. If you use `let` or `const` before they're declared you will get a `ReferenceError`.
+
+In the context of functions, it will hoist the whole function so you can use it fully before it has been declared.
+
+# Modules
+Allows you to create functionality within another JavaScript file and import exported functions, classes and/or variables.
+
+You can export these using the `export` keyword:
+```js
+export function add(a, b) {
+    return a + b;
+}
+
+export function subtract(a, b) {
+    return a - b;
+}
+
+const PI = 3.14159;
+export { PI };
+```
+
+You can then import them into another file like this:
+```js
+import { add, subtract, PI } from './math.js';
+
+console.log(add(5, 3));        // Outputs: 8
+console.log(subtract(10, 4));  // Outputs: 6
+console.log(PI);               // Outputs: 3.14159
+```
+or use the `*` syntax to import everything:
+```js
+import * as Math from './math.js';
+
+console.log(Math.add(5, 3));        // Outputs: 8
+console.log(Math.subtract(10, 4));  // Outputs: 6
+console.log(Math.PI);               // Outputs: 3.14159
+```
+
+You can have 1 default export per module:
+```js
+// In math.js
+export default function multiply(a, b) {
+    return a * b;
+}
+
+// In app.js
+import multiply from './math.js';
+
+console.log(multiply(4, 5));  // Outputs: 20
+```
+
+# Arguments Object
+Functions contain an 'arguments' object array thing which allows you to have functions with a variable amount of arguments:
+```js
+function logArgs() {
+  for (const arg of arguments) {
+    console.log(arg);
+  }
+}
+
+logArgs(1, 2, 3);
+// result:
+// 1
+// 2
+// 3
+
+logArgs("example"); // "example"
+```
+
+You can't access most of the default Array methods with this because that wouldn't make sense.
+Most apps don't use this, they use 'rest parameter syntax'.
+
+# Rest Parameters
+Self-explanatory:
+```js
+function logArgs(...args) {
+  for (const arg of args) {
+    console.log(arg);
+  }
+}
+
+logArgs(1, 2, 3);
+// result:
+// 1
+// 2
+// 3
+```
+
+The rest parameter is a real array so you can use all the array methods.
+
+# Naming Best Practice
+Examples:
+```js
+// Bools
+let isLoading = true;
+let hasPermission = false;
+let canEdit = true;
+
+// Functions
+function getUserData() { /* ... */ }
+function isValidEmail(email) { /* ... */ }
+function getProductDetails(productId) { /* ... */ }
+function setUserPreferences(preferences) { /* ... */ }
+function handleClick() { /* ... */ }
+
+// Loop vars (single letters).
+for (let i = 0; i < array.length; i++) { /* ... */ }
+```
+
+# Callbacks and Higher-Order Functions
+## Callbacks
+A function that is passed as an argument into another function.
+
+Using an arrow function as the callback:
+```js
+let numbers = [1, 2, 3, 4, 5];
+numbers.forEach(number => console.log(number * 2));
+```
+
+### `forEach()`
+Lets you do an operaration each element in an array, e.g:
+```js
+let numbers = [1, 2, 3, 4, 5];
+
+numbers.forEach(function(number) {
+  console.log(number * 2);
+});
+```
+
+the `forEach()` callback function can take 3 parameters `number`, `index`, `array`
+
+If you have an independent function that can handle the parameters of the higher-order function you can just do this: `higherOrderFunc(callbackFunc)`
+
+## Higher-Order Functions
+Takes one or more functions as arguments, returns a function, or both.
+
+Allows you to describe what you want to accomplish rather than describing it step-by-step (declarative vs imperative programming).
+
+### 'Function Factories'
+Using functions to create more specific functions
+```js
+function multiplyBy(factor) {
+  return function(number) {
+    return number * factor;
+  }
+}
+
+let double = multiplyBy(2);
+let triple = multiplyBy(3);
+
+console.log(double(5)); // 10
+console.log(triple(5)); // 15
+```
+
+## Map()
+Lets you create a new array by applying a function to each element of the original array:
+```js
+const doubled = numbers.map((num) => num * 2);
+```
+
+It needs to have the same number of items as the original (I think).
+
+The callback function can take up to 3 arguments:
+```js
+const numbers = [3, 4, 5, 6, 7].map((element, index, array) => {
+  console.log("Element:", element);
+  console.log("Index:", index);
+  console.log("Array:", array);
+  return element * 2;
+});
+```
+
+## Filter()
+Used to make a new array with elements that pass a test:
+```js
+const evenNumbers = numbers.filter((num) => num % 2 === 0);
+```
+
+Callback function can take the same three arguments as map.
+
+Returns an empty array if nothing passes the test.
+
+## Reduce()
+Lets you process an array into a single value: Can be a number, string, object or another array.
+
+Runs on each element of the array and passes on the running result (the accumulator) and the current value:
+```js
+const numbers = [1, 2, 3, 4, 5];
+const sum = numbers.reduce(
+  (accumulator, currentValue) => accumulator + currentValue,
+  0
+);
+
+console.log(sum); // 15
+```
+
+The 0 above is reduces second argument and sets an initial value for the accumulator. If you don't set this it will use the initial value of the array.
+
+## Method Chaining
+A method would have to return the object its apart of in order to chain.
+
+## Sort()
+By default worts based on UTF-16 code unit values (so it will sort alphabetically but not usefully in any other way).
+
+You can provide an optional sort callback function:
+```js
+const numbers = [414, 200, 5, 10, 3];
+
+numbers.sort((a, b) => a - b);
+
+console.log(numbers); // [3, 5, 10, 200, 414]
+```
+a is the first value, b is the second value. The above comparison takes advantage of the fact that negative numbers are falsy and vice-versa. A 'true' will result in a swap.
+
+## Every() and Some()
+Allows you to check if all or some of the elements in an array meet a condition:
+```js
+const hasAllEvenNumbers = numbers.every((num) => num % 2 === 0);
+```
+
+# Dates and Times
+Creating a new date: `const now = new Date();`
+With a specific date/time: `const specificDate = new Date("July 4, 1776 12:00:00");` (format needs to be recognisable to the Date object).
+
+If you don't set a value it will be 'now':
+```js
+const now = new Date();
+const date = now.getDate(); // Will get day of the month.
+```
+
+In JavaScript, months are zero-based when using `Date.getMonth()`.
+
+Format date in ISO:
+```js
+const date = new Date();
+console.log(date.toISOString());
+```
+
+toLocaleDateString(locales, options): format the date to the users local by default. Options is an object:
+```js
+const date = new Date();
+const options = {
+  weekday: "long",
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+};
+console.log(date.toLocaleDateString("en-GB", options));
+```

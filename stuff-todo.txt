@@ -1,0 +1,6 @@
+Higher Order Functions and Callbacks
+Dates
+Maps and Sets
+Classes
+Recursion
+Asynchronous JavaScript
