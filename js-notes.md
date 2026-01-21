@@ -818,3 +818,43 @@ const options = {
 };
 console.log(date.toLocaleDateString("en-GB", options));
 ```
+
+`Date.now()` returns the number of milliseconds from the UNIX epoch.
+
+# Sets
+Like an array but it will make sure that values only appear in it once.
+
+You create a set using the `Set()` constructor (can be initialised with or without values):
+```js
+const treeSet = new Set(['Baobab', 'Jackalberry', 'Mopane Tree', 'Breadfruit']);
+```
+## Methods
+- `add()`
+- `delete()`
+- `has()`
+- `entries()`: Returns a `SetIterator` which contains an array of teh values in a `[value, value]` format
+- `forEach()`
+- `keys()`: Alias for `values()`
+- `values()`: Shows values in the set.
+- `clear()`: Removes all items.
+- `size()`: Returns the number of items in the set.
+
+
+## WeakSet()
+A `WeakSet()` is a type of set with fewer features that lets you store weakly held object references and symbols. `WeakSet()` does not support primitives.
+
+The 'weak' part means that the set doesn't prevent the objects inside of it from being garbage collected if there are no other references to them.
+
+Weak sets also aren't iterable and don't expose their context directly
+
+Has the `add()`, `delete()` and `has()` methods.
+
+| Feature                | Set                                                                             | WeakSet                                        |
+|------------------------|---------------------------------------------------------------------------------|------------------------------------------------|
+| Type of Values Stored  | Stores any data type                                                            | Stores only objects                            |
+| Referencing            | Strong referencing                                                              | Weak referencing                               |
+| Iteration              | Supports iteration with forEach and loops                                       | Does not support iteration                     |
+| Methods and Properties | add(), delete(), has(), keys(), values(), size, and more                        | add(), delete(), and has() only                |
+| Use case               | General-purpose collection of unique values and removing duplicates from arrays | Efficient memory tracking of object references |
+
+# Maps
