@@ -781,7 +781,7 @@ numbers.sort((a, b) => a - b);
 
 console.log(numbers); // [3, 5, 10, 200, 414]
 ```
-a is the first value, b is the second value. The above comparison takes advantage of the fact that negative numbers are falsy and vice-versa. A 'true' will result in a swap.
+a is the first value, b is the second value. Should return a negative valid if a should come before b, a positive if a should come after b and 0 if they are equal.
 
 ## Every() and Some()
 Allows you to check if all or some of the elements in an array meet a condition:
@@ -832,7 +832,7 @@ const treeSet = new Set(['Baobab', 'Jackalberry', 'Mopane Tree', 'Breadfruit']);
 - `add()`
 - `delete()`
 - `has()`
-- `entries()`: Returns a `SetIterator` which contains an array of teh values in a `[value, value]` format
+- `entries()`: Returns a `SetIterator` which contains an array of the values in a `[value, value]` format
 - `forEach()`
 - `keys()`: Alias for `values()`
 - `values()`: Shows values in the set.
@@ -858,3 +858,372 @@ Has the `add()`, `delete()` and `has()` methods.
 | Use case               | General-purpose collection of unique values and removing duplicates from arrays | Efficient memory tracking of object references |
 
 # Maps
+Stores key-value pairs similar to an object but it allows keys of any type, including objects and functions.
+
+A Map provides better performance over the standard object when it comes to frequent addition and removals of key-value pairs.
+
+Remembers the order in which keys are inserted.
+
+If you set the same key twice it will update the value.
+
+Creating a map (you can also do this without setting its values):
+```js
+const myTreesMap = new Map([
+ [{ type: 'deciduous' }, 'Maple tree'],
+ [['forest', 'grove'], 'Pine tree'],
+ [42, 'Oak tree'],
+ [true, 'Birch tree'],
+ [function() { return 'I am a function key'; }, 'Willow tree'],
+]);
+/*
+Map(5) {{…} => 'Maple tree', Array(2) => 'Pine tree', 42 => 'Oak tree', true => 'Birch tree', ƒ => 'Willow tree'}
+  [[Entries]]
+    0:{Object => "Maple tree"}
+      key: {type: 'deciduous'}
+      value: "Maple tree"
+    1:{Array(2) => "Pine tree"}
+      key: (2)
+      value: "Pine tree"
+    2:{42 => "Oak tree"}
+      key: 42
+      value: "Oak tree"
+    3:{true => "Birch tree"}
+      key: true
+      value: "Birch tree"
+    4:{function () { return "I'm a function key"; } => "Willow tree"}
+      key: f ()
+      value: "Willow tree"
+    size: 5
+    [[Prototype]]: Map
+*/
+```
+
+Or:
+```js
+myTreesMap.set({ type: 'deciduous' }, 'Maple tree');
+```
+
+| Feature       | Map                                                                                   | WeakMap                                                          |
+|---------------|---------------------------------------------------------------------------------------|------------------------------------------------------------------|
+| Key Type      | Keys can be of any data type, including strings, numbers, objects, or even functions. | Keys must be objects.                                            |
+| Use Case      | Use a Map when you need to associate data with any type of key.                       | Use a WeakMap when you only need to associate data with objects. |
+| Iteration     | You can loop through a Map using forEach(), keys(), values(), or entries().           | A WeakMap is not iterable.                                       |
+| Size Property | Map has a size property to get the number of key-value pairs.                         | WeakMap does not have a size property.                           |
+
+## Methods
+- `set()`: Allows you to add values.
+- `get(key)`: Gets the value associated with the key. Returns a reference to the object.
+- `has(key)`
+- `delete(key)`: Will return whether or not the delete was sucessful.
+- `clear()`: Deletes all key-value pairs.
+- `entries()`: Check the entries of the map (returns entries as `MapIterator`).
+- `keys()`: returns an iterable MapIterator of the keys in the map.
+- `values()`: returns an iterable MapIterator of the values in the map.
+- `forEach((value, key) => {})`: To loop through all entires.
+- `size`: Number of key-value pairs in the map.
+
+## WeakMap
+Also a collection of key-value pairs but it uses weak references for its keys. The keys must be objects while the values can be any type.
+
+Has the `set()`, `get()`, `has()` and `delete()` methods.
+
+```js
+const myTreeWeakMap = new WeakMap();
+
+myTreeWeakMap.set({ id: 1 }, 'Maple tree');
+myTreeWeakMap.set({ id: 2 }, 'Pine tree');
+myTreeWeakMap.set({ id: 3 }, 'Oak tree');
+myTreeWeakMap.set({ id: 4 }, 'Birch tree');
+myTreeWeakMap.set({ id: 5 }, 'Willow tree');
+/*
+WeakMap {{…} => 'Willow tree', {…} => 'Maple tree', {…} => 'Pine tree', {…} => 'Oak tree'}
+  [[Entries]]
+    No properties
+  [[Prototype]]: WeakMap
+*/
+```
+
+# Classes
+Blueprints which let you define multiple objects of the same kind.
+
+Basic syntax:
+```js
+class MyClassName {
+  // Class Methods
+  constructor(value) { 
+    this.property1 = value;
+  }
+  method1() { ... }
+  method2() { ... }
+  ...
+}
+```
+Properties and methods can be accessed using dot notation when you create an instance of the object.
+
+You can also define a class as a class expression, you make an anonymous class and assign it to a variable:
+```js
+const Dog = class {
+  constructor(name) {
+    this.name = name;
+  }
+
+  bark() {
+    console.log(`${this.name} says woof!`);
+  }
+};
+```
+
+## `this` Keyword
+The context where code is supposed to run. E.g. when used in a method `this` is a reference to the object the method is associated with:
+```js
+class Dessert {
+  constructor(name, price) {
+    this.name = name;
+    this.price = price;
+  }
+
+  showPrice() {
+    console.log(`The price of ${this.name} is $${this.price}.`);
+  }
+}
+```
+
+`this` works differently in arrow functions. They are helpful for callbacks but in that context 'this' won't refer currrent object in object methods; `this` gets inherited from their parent scope.
+
+## Inheritence
+Use `extends` syntax:
+```js
+class Vehicle {
+  constructor(brand, year) {
+    this.brand = brand;
+    this.year = year;
+  }
+}
+
+class Car extends Vehicle {
+  honk() {
+    console.log("Honk! Honk!");
+  }
+}
+```
+
+You don't need a constructor if you aren't defining new properties.
+
+There is also `super()` which when used in a child classes' constructor will invoke the constructor of the superclass and can be used to access the parent class's methods, constructors and fields:
+```js
+class Vehicle {
+  constructor(brand, year) {
+    this.brand = brand;
+    this.year = year;
+  }
+}
+
+class Car extends Vehicle {
+  constructor(brand, year, numDoors) {
+    super(brand, year);
+    this.numDoors = numDoors;
+  }
+}
+```
+
+## Static
+Often used for data/methods relevant to all instances of a class 
+Conceptually the same as C#:
+```js
+class Movie {
+  static numberOfMovies = 0
+
+  constructor(title, rating) {
+    this.title = title;
+    this.rating = rating;
+    Movie.numberOfMovies++;
+  }
+
+  static compareMovies(movieA, movieB) {
+    if (movieA.rating > movieB.rating) {
+      console.log(`${movieA.title} has a higher rating.`);
+    } else if (movieA.rating < movieB.rating) {
+      console.log(`${movieB.title} has a higher rating.`);
+    } else {
+      console.log("These movies have the same rating.");
+    }
+  }
+
+}
+
+let movieA = new Movie("Movie A", 80);
+let movieB = new Movie("Movie B", 45);
+Movie.compareMovies(movieA, movieB);
+console.log(movieA);
+```
+
+### Factory Methods
+To create specific objects based on a class within the class:
+```js
+class Pizza {
+  constructor(type, price) {
+    this.type = type;
+    this.price = price;
+  }
+
+  static createMargherita() {
+    return new this("Margherita", 6.99);
+  }
+}
+```
+
+In the context of static methods, `this` refers to the class itself rather than the object you are creating.
+
+# Recursion
+A way of creating a loop where a function calls itself repeatedly. Example:
+```js
+const recursiveCountdown = (number) => {
+  if (number < 1) {
+    return;
+  }
+  console.log(number);
+  recursiveCountdown(number - 1);
+};
+
+recursiveCountdown(5);
+```
+
+You can take advantage of the call stack which is the idea that JS will wait for a function to finish before continuing. This operates on a LIFO basis. This means you can make the counter count up by simply swapping the logging and recursion step.
+```js
+const recursiveCounter = (number) => {
+  if (number < 1) {
+    return;
+  }
+  recursiveCountdown(number - 1);
+  console.log(number);
+};
+
+recursiveCounter(5); 
+```
+Any code after the recursion step will happen AFTER that specific recursion step is complete, so you essentially reverse the execusion order for code below the recursion.
+
+# Async
+The event handler thing + callbacks is how async used to happen.
+Now promises are used apparently.
+
+## Async in `script` Elements
+The `async` and `defer` attributes in the HTML `script` tag determine how the JS file is loaded and executed in web pages.
+
+When using the `async` attribute, the browser will continue to pass the HTML while the script is being downloaded, then it will pause and execute the script before continuing to parse the HTML. The `defer` attribute is different in that it will wait until the HTML parsing is complete berfore executing.
+
+`defer` scripts will also execute in the order they appear in the HTML instead of running immediately on download at some random time.
+
+## Fetch API
+Lets you make network requests, example of a `GET` request:
+```js
+fetch('https://api.example.com/data')
+```
+
+Can fetch text, JSON, images, videos, etc.
+
+The `fetch()` method returns a response, you can use the, `then` method to access it. You can also chain `then`s:
+```js
+fetch('https://api.example.com/data')
+  .then(response => response.json())
+  .then(data => console.log(data))
+```
+
+The response from the fetch API is a `Promise`. The use of multiple `then`s is known as promise chaining.
+
+Option setting with fetch for other kinds of requests:
+```js
+fetch('https://api.example.com/users', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    name: 'John Doe',
+    email: 'john@example.com'
+  })
+})
+```
+
+## Promises
+An object that represents the eventual completion or failure of an async operation:
+```js
+const aPromise = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve("Operation successful!");
+  }, 1000);
+});
+```
+
+You can then use `then` or `catch` to handle success or errors:
+```js
+aPromise.then((result) => {
+  console.log(result);  // Outputs: "Operation successful!"
+}).catch((error) => {
+  console.error(error);
+});
+```
+
+Then chaining is a Promise feature. Allows you to perform multiple async operations one after the other on the response.
+
+## Async/Await
+These are built on top of Promises and are meant to make reading and writing async code easier. Used like this:
+```js
+async function delayedGreeting(name) {
+  console.log("A Messenger entered the chat...");
+  await new Promise(resolve => setTimeout(resolve, 2000));
+  console.log(`Hello, ${name}!`);
+}
+
+delayedGreeting("Alice");
+console.log("First Printed Message!");
+```
+
+`await` lets you wait for an async function to finish before continuing. An advantage of this is being able to to handle errors using a `try`/`catch`:
+```js
+async function fetchUserData() {
+  try {
+    let response = await fetch(`https://api.example.com/users`);
+    let userData = await response.json();
+    console.log(userData);
+  } catch (error) {
+    console.log("Error fetching user data:", error);
+  }
+}
+
+fetchUserData();
+```
+You need to await the JSON thing above to wait for the JSON to parse.
+Async functions will always return a `Promise`.
+
+# JS Runtimes
+JavaScript runtimes provide extra tools (the DOM for browsers, Fetch API for network requests, etc).
+
+Node.js is one of the most popular non-browser runtimes built on Google's V8 engine.
+
+# Try... Catch... Finally
+Finally part usually used for like cleanup and stuff.
+
+# Debugger
+Put the `debugger` statement somewhere you your code to pause execution.
+
+`console.dir()`: Display interactive list of the properties of a JS object.
+`console.table()`: Displays tabular data is a table in the console. Must be array or object. Lets you spectify which properties (columns) to display.
+
+# HTTP Methods
+GET Method: This is used to fetch data from a server.
+POST Method: This is used to submit data to a server which creates a new resource.
+PUT Method: This is used to update a resource by replacing it entirely.
+PATCH Method: This is used to partially update a resource.
+DELETE Method: This is used to remove records from a database.
+
+# Local Storage
+Available until explicitly removed.
+localStorage.setItem() Method: This method is used to store a key-value pair in localStorage.
+localStorage.getItem() Method: This method is used to retrieve the value of a given key from localStorage.
+localStorage.removeItem() Method: This method is used to remove a specific item from localStorage using its key.
+localStorage.clear() Method: This method is used to clear all of the stored data in localStorage.
+
+# Session Storage
+Available only for the current session. Clears when the window is closed or the browser tab is closed.
+
+
